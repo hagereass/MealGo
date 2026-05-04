@@ -16,7 +16,11 @@
     }
 
     return {
-      plugins: [react()],
+      plugins: [
+  react({
+    jsxImportSource: "react",
+  }),
+],
       server: {
         port: clientPort,
         open: true,
