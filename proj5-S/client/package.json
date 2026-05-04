@@ -48,6 +48,7 @@
             "react-hook-form": "^7.55.0",
             "react-resizable-panels": "^2.1.7",
             "react-router": "*",
+            "react-router-dom": "^7.14.2",
             "recharts": "^2.15.2",
             "sonner": "^2.0.3",
             "tailwind-merge": "*",
@@ -62,10 +63,10 @@
             "vite": "6.3.5"
       },
       "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "preview": "vite preview"
-},
+            "dev": "vite",
+            "build": "vite build",
+            "preview": "vite preview"
+      },
       "description": "This is a code bundle for Responsive Food Delivery Website (Copy) (Copy). The original project is available at https://www.figma.com/design/QmXPCtk9T1nSLZzXM0vY2b/Responsive-Food-Delivery-Website--Copy---Copy-.",
       "main": "setup-db.js",
       "keywords": [],
