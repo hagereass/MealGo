@@ -3,13 +3,18 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const createCouponRoute = require('./createCoupon'); // استدعاء ملف createCoupon.js
+const createCouponRoute = require('./createCoupon');
 
 const app = express();
+
 app.use(cors());
 app.use(bodyParser.json());
 
-// نستخدم route
 app.use('/api/admin', createCouponRoute);
 
-app.listen(4000, () => console.log('Server running on http://localhost:4000'));
+// 👇 مهم جدًا
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
