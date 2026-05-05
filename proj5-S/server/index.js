@@ -1,5 +1,11 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
-const nftArtifact = require('./artifacts/contracts/CouponNFT.sol/CouponNFT.json');
+const nftArtifact = require("./abi/CouponNFT.json");
+
+const nftContract = new ethers.Contract(
+  process.env.NFT_CONTRACT_ADDRESS,
+  nftArtifact.abi,
+  wallet
+);
 const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
