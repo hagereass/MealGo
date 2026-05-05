@@ -8,7 +8,7 @@ const { pool } = require('./db');
 const ethers = require('ethers');
 const abi = require('./NFT_ABI.json');
 // blockchain helpers (used by both admin and redemption endpoints)
-const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 const rawKey = (process.env.PRIVATE_KEY || '').trim();
 console.log('PRIVATE_KEY raw length', rawKey.length, rawKey);
 for (let i = 0; i < rawKey.length; i++) {
