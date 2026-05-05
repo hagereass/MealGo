@@ -26,7 +26,7 @@ if (!rawKey) {
 }
 const wallet = new ethers.Wallet(rawKey, provider);
 console.log('Using wallet address', wallet.address);
-const nftContract = new ethers.Contract(process.env.NFT_CONTRACT_ADDRESS, nftArtifact.abi, wallet);
+
 
 const app = express();
 const port = Number(process.env.API_PORT || 4000);
