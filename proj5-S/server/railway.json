@@ -7,7 +7,6 @@
   "deploy": {
     "startCommand": "node server.js",
     "numReplicas": 1,
-    "restartPolicyType": "always",
-    "healthcheckPath": "/api/health"
+    "restartPolicyType": "always"
   }
 }

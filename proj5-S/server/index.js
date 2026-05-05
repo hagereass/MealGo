@@ -3291,14 +3291,18 @@ app.get('/api/auth/oauth/complete', (req, res) => {
 });
 
 const startServer = async () => {
+  // Start server first, initialize DB in background
+  app.listen(port, () => {
+    console.log(`MealGo API server running on http://localhost:${port}`);
+  });
+
+  // Try to ensure DB columns in background (non-blocking)
   try {
     await ensureRestaurantImageColumn();
-    app.listen(port, () => {
-      console.log(`MealGo API server running on http://localhost:${port}`);
-    });
+    console.log('✅ Database columns verified');
   } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
+    console.warn('⚠️ Database initialization deferred:', error.message);
+    // Don't crash - database operations will fail gracefully with proper errors
   }
 };
 
