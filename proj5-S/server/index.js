@@ -6,8 +6,7 @@ const crypto = require('crypto');
 const { promisify } = require('util');
 const { pool } = require('./db');
 const ethers = require('ethers');
-const nftArtifact = require('./artifacts/contracts/CouponNFT.sol/CouponNFT.json');
-
+const abi = require('./NFT_ABI.json');
 // blockchain helpers (used by both admin and redemption endpoints)
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const rawKey = (process.env.PRIVATE_KEY || '').trim();
