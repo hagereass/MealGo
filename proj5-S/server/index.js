@@ -1,32 +1,31 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
-const nftArtifact = require("./abi/CouponNFT.json");
 
+const express = require('express');
+const cors = require('cors');
+const crypto = require('crypto');
+const { promisify } = require('util');
+
+const { ethers } = require('ethers');   // ✔️ لازم قبل الاستخدام
+const { pool } = require('./db');
+
+const nftArtifact = require("./abi/CouponNFT.json");
+const abi = require('./NFT_ABI.json');
+
+// provider + wallet
+const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+
+const rawKey = (process.env.PRIVATE_KEY || '').trim();
+if (!rawKey) throw new Error('PRIVATE_KEY missing from environment');
+
+const wallet = new ethers.Wallet(rawKey, provider);
+console.log('Using wallet address', wallet.address);
+
+// contract
 const nftContract = new ethers.Contract(
   process.env.NFT_CONTRACT_ADDRESS,
   nftArtifact.abi,
   wallet
 );
-const express = require('express');
-const cors = require('cors');
-const crypto = require('crypto');
-const { promisify } = require('util');
-const { pool } = require('./db');
-const ethers = require('ethers');
-const abi = require('./NFT_ABI.json');
-// blockchain helpers (used by both admin and redemption endpoints)
-const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-const rawKey = (process.env.PRIVATE_KEY || '').trim();
-console.log('PRIVATE_KEY raw length', rawKey.length, rawKey);
-for (let i = 0; i < rawKey.length; i++) {
-  const code = rawKey.charCodeAt(i);
-  if (code < 32 || code > 126) console.log('Nonprintable char at', i, code);
-}
-if (!rawKey) {
-  throw new Error('PRIVATE_KEY missing from environment');
-}
-const wallet = new ethers.Wallet(rawKey, provider);
-console.log('Using wallet address', wallet.address);
-
 
 const app = express();
 const port = Number(process.env.API_PORT || 4000);
