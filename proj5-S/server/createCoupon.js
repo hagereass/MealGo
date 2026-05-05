@@ -1,7 +1,7 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const express = require('express');
 const ethers = require('ethers');
-const artifact = require('./artifacts/contracts/CouponNFT.sol/CouponNFT.json');
+const abi = require('./NFT_ABI_new.json');
 const { pool } = require('./db');
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 // Initialize provider and wallet with logging
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-const nftContract = new ethers.Contract(process.env.NFT_CONTRACT_ADDRESS, artifact.abi, wallet);
+const nftContract = new ethers.Contract(process.env.NFT_CONTRACT_ADDRESS, abi, wallet);
 
 console.log('✅ NFT Service initialized:', {
   provider: process.env.RPC_URL,
