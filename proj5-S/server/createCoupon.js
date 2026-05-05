@@ -1,22 +1,29 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+
 const express = require('express');
 const ethers = require('ethers');
-const abi = require('./NFT_ABI_new.json');
+const abi = require('./NFT_ABI_new.json').abi;
 const { pool } = require('./db');
 
 const router = express.Router();
 
-// Initialize provider and wallet with logging
-const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-const nftContract = new ethers.Contract(process.env.NFT_CONTRACT_ADDRESS, abi, wallet);
+// ✅ v5 correct provider
+const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 
-console.log('✅ NFT Service initialized:', {
-  provider: process.env.RPC_URL,
+// wallet
+const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+
+// contract
+const nftContract = new ethers.Contract(
+  process.env.NFT_CONTRACT_ADDRESS,
+  abi,
+  wallet
+);
+
+console.log('NFT Service initialized:', {
   wallet: wallet.address,
   contract: process.env.NFT_CONTRACT_ADDRESS,
 });
-
 // utility handler used by both admin and user mounts
 async function getUserCouponsHandler(req, res) {
   const { walletAddress } = req.query;
