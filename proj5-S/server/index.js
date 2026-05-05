@@ -5,26 +5,26 @@ const cors = require('cors');
 const crypto = require('crypto');
 const { promisify } = require('util');
 
-const ethers = require('ethers');   // ✅ صح
+const { ethers } = require('ethers');   // v5 style
 const { pool } = require('./db');
 
 const nftArtifact = require("./abi/CouponNFT.json");
 const abi = require('./NFT_ABI.json');
 
-// provider + wallet
+// لازم تتأكد إن ABI array مش object
 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
 
 const rawKey = (process.env.PRIVATE_KEY || '').trim();
 if (!rawKey) throw new Error('PRIVATE_KEY missing from environment');
 
 const wallet = new ethers.Wallet(rawKey, provider);
+
 console.log('Using wallet address', wallet.address);
 
 // contract
 const nftContract = new ethers.Contract(
   process.env.NFT_CONTRACT_ADDRESS,
-  nftArtifact.abi,
+  nftArtifact.abi,   // مهم: لازم تكون array
   wallet
 );
 
