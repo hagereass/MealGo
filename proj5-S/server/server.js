@@ -1,6 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const app = express();
+
+app.use(cors({
+  origin: "https://meal-go-alpha.vercel.app",
+  credentials: true
+}));
+
+app.use(express.json());
 const bodyParser = require('body-parser');
 
 const createCouponRoute = require('./createCoupon');

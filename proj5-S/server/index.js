@@ -2,6 +2,14 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 
 const express = require('express');
 const cors = require('cors');
+const app = express();
+
+app.use(cors({
+  origin: "https://meal-go-alpha.vercel.app",
+  credentials: true
+}));
+
+app.use(express.json());
 const crypto = require('crypto');
 const { promisify } = require('util');
 
