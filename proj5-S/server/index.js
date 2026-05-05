@@ -2,24 +2,34 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 
 const express = require('express');
 const cors = require('cors');
+const crypto = require('crypto');
+const { promisify } = require('util');
+
 const app = express();
+const port = Number(process.env.API_PORT || 4000);
+
+// CORS configuration - allow Vercel frontend and localhost
+const ALLOWED_ORIGINS = [
+  'https://meal-go-alpha.vercel.app',
+  process.env.CLIENT_URL || 'http://localhost:3000',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:5173' // Vite default
+];
 
 app.use(cors({
-  origin: "https://meal-go-alpha.vercel.app",
+  origin: ALLOWED_ORIGINS,
   credentials: true
 }));
 
 app.use(express.json());
-const crypto = require('crypto');
-const { promisify } = require('util');
 
 const { ethers } = require('ethers');   // v5 style
 const { pool } = require('./db');
 
 const nftArtifact = require("./abi/CouponNFT.json");
-const abi = require('./NFT_ABI.json');
+const { abi } = require('./NFT_ABI_new.json');
 
-// لازم تتأكد إن ABI array مش object
 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 
 const rawKey = (process.env.PRIVATE_KEY || '').trim();
@@ -32,12 +42,18 @@ console.log('Using wallet address', wallet.address);
 // contract
 const nftContract = new ethers.Contract(
   process.env.NFT_CONTRACT_ADDRESS,
-  nftArtifact.abi,   // مهم: لازم تكون array
+  abi,
   wallet
 );
 
-const app = express();
-const port = Number(process.env.API_PORT || 4000);
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'admin@mealgo.com').toLowerCase();
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI || 'http://localhost:4000/auth/google/callback';
+const oauthStateStore = new Map();
+const oauthTicketStore = new Map();
 
 // ✅ Health check endpoint
 app.get('/api/health', async (req, res) => {
@@ -58,23 +74,13 @@ app.get('/api/health', async (req, res) => {
     });
   }
 });
+
 const scryptAsync = promisify(crypto.scrypt);
-const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'admin@mealgo.com').toLowerCase();
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
-const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI || 'http://localhost:4000/auth/google/callback';
-const oauthStateStore = new Map();
-const oauthTicketStore = new Map();
 
 // Enable/disable 2FA for testing, default ON (can be turned off by setting ENABLE_2FA=false in .env)
 const ENABLE_2FA = process.env.ENABLE_2FA !== 'false';
 const twoFACodes = new Map();
 const passwordResetOtps = new Map();
-
-app.use(cors());
-app.use(express.json());
 
 // mount admin helper routes (create-coupon mints NFTs + creates DB entry)
 const createCouponRoute = require('./createCoupon');
