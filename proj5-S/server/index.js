@@ -12,7 +12,7 @@ const nftArtifact = require("./abi/CouponNFT.json");
 const abi = require('./NFT_ABI.json');
 
 // provider + wallet
-const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 
 const rawKey = (process.env.PRIVATE_KEY || '').trim();
 if (!rawKey) throw new Error('PRIVATE_KEY missing from environment');
