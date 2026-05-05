@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { Mail, Lock, User, Building, Bike, CheckCircle2, Circle, Eye, EyeOff } from 'lucide-react';
 import { setCurrentUserSession } from '../utils/session';
 import { getPasswordIssues, isPasswordStrong, passwordRequirements } from '../utils/passwordRules';
+import { api } from '../utils/api';
 
 type UserRole = 'customer' | 'restaurant' | 'driver';
 
@@ -35,7 +36,7 @@ export default function SignUp() {
 
     const completeOauth = async () => {
       try {
-        const response = await fetch(`/api/auth/oauth/complete?ticket=${encodeURIComponent(oauthTicket)}`);
+        const response = await api.get(`/api/auth/oauth/complete?ticket=${encodeURIComponent(oauthTicket)}`);
         if (!response.ok) {
           const err = await response.json().catch(() => ({}));
           alert(err.message || 'Google OAuth failed');

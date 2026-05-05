@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { Mail, Lock, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { setCurrentUserSession } from '../utils/session';
+import { api } from '../utils/api';
 
 type SignInRole = 'customer' | 'admin' | 'restaurant' | 'driver';
 
@@ -48,7 +49,7 @@ export default function SignIn() {
     const completeOauth = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/auth/oauth/complete?ticket=${encodeURIComponent(oauthTicket)}`);
+        const response = await api.get(`/api/auth/oauth/complete?ticket=${encodeURIComponent(oauthTicket)}`);
         if (!response.ok) {
           const err = await response.json().catch(() => ({}));
           setError(err.message || 'Google sign in failed');
@@ -90,14 +91,10 @@ export default function SignIn() {
 
     try {
       // Check credentials with backend
-      const response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          role: selectedRole,
-        }),
+      const response = await api.post('/api/auth/signin', {
+        email,
+        password,
+        role: selectedRole,
       });
       
       if (response.ok) {
@@ -172,11 +169,7 @@ export default function SignIn() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: pendingCredentials.id, code: twoFACode }),
-      });
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        setError(err.message || 'Invalid 2FA code');
+      });api.post('/api/auth/verify-2fa', { userId: pendingCredentials.id, code: twoFACode   setError(err.message || 'Invalid 2FA code');
         return;
       }
 

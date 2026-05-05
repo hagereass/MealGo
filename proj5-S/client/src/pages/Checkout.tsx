@@ -3,6 +3,7 @@ import { useWalletCoupons } from '../hooks/useWallet';
 import { useLocation, useNavigate } from 'react-router';
 import { Minus, Plus, MapPin, CreditCard, Tag, ChefHat, Phone, Wallet, LockKeyhole, ArrowLeft } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { api } from '../utils/api';
 
 interface MenuItem {
   id: string;
@@ -159,14 +160,10 @@ export default function Checkout() {
 
     setApplyingCoupon(true);
     try {
-      const response = await fetch('/api/coupons/redeem', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          code: promoCode,
-          walletAddress,
-          userId: currentUser?.id || null,
-        }),
+      const response = await api.post('/api/coupons/redeem', {
+        code: promoCode,
+        walletAddress,
+        userId: currentUser?.id || null,
       });
 
       if (!response.ok) {
@@ -214,25 +211,21 @@ export default function Checkout() {
     }
 
     try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customerId: currentUser.id,
-          customerEmail: currentUser.email || null,
-          items: orderItems.map((item) => ({
-            menuItemId: item.id,
-            quantity: item.quantity,
-          })),
-          paymentMethod,
-          promoCode: promoCode.trim() || null,
-          deliveryLine1: addressLine1.trim(),
-          deliveryCity: city.trim(),
-          deliveryState: stateRegion.trim(),
-          deliveryPostalCode: postalCode.trim(),
-          deliveryCountryCode: 'US',
-          deliveryNotes: `Phone: ${phone.trim()}`,
-        }),
+      const response = await api.post('/api/orders', {
+        customerId: currentUser.id,
+        customerEmail: currentUser.email || null,
+        items: orderItems.map((item) => ({
+          menuItemId: item.id,
+          quantity: item.quantity,
+        })),
+        paymentMethod,
+        promoCode: promoCode.trim() || null,
+        deliveryLine1: addressLine1.trim(),
+        deliveryCity: city.trim(),
+        deliveryState: stateRegion.trim(),
+        deliveryPostalCode: postalCode.trim(),
+        deliveryCountryCode: 'US',
+        deliveryNotes: `Phone: ${phone.trim()}`,
       });
 
       const payload = await response.json().catch(() => ({}));
