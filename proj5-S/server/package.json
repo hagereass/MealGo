@@ -1,10 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node index.js"
+    "dev": "node server.js",
+    "build": "echo Build completed"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.6",
