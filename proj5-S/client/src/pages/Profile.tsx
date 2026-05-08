@@ -135,7 +135,7 @@ export default function Profile() {
     setIsVerifyingPassword(true);
 
     try {
-      const response = await fetch('${API_BASE}/api/auth/verify-current-password', {
+      const response = await fetch(`${API_BASE}/api/auth/verify-current-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -185,7 +185,7 @@ export default function Profile() {
     setIsUpdatingPassword(true);
 
     try {
-      const response = await fetch('${API_BASE}/api/auth/change-password', {
+      const response = await fetch(`${API_BASE}/api/auth/change-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

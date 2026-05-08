@@ -120,7 +120,7 @@ export default function CustomerOrdering() {
       try {
         setLoading(true);
         // Fetch all restaurants
-        const restResponse = await fetch('${API_BASE}/api/restaurants');
+        const restResponse = await fetch(`${API_BASE}/api/restaurants`);
         if (!restResponse.ok) {
           throw new Error('Failed to load restaurants');
         }

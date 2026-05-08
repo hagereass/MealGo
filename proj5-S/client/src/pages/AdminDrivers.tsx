@@ -1,54 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AdminSidebar } from '../components/AdminSidebar';
 import { Search, Plus, MapPin, Star, Edit, Trash2, Check, X, Bike, TrendingUp } from 'lucide-react';
-const API_BASE = 'https://mealgo-production.up.railway.app';
-
-export const api = {
-  get: async (url: string) => {
-    const res = await fetch(`${API_BASE}${url}`);
-    return handleResponse(res);
-  },
-
-  post: async (url: string, body: any) => {
-    const res = await fetch(`${API_BASE}${url}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    return handleResponse(res);
-  },
-
-  patch: async (url: string, body?: any) => {
-    const res = await fetch(`${API_BASE}${url}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    return handleResponse(res);
-  },
-
-  delete: async (url: string) => {
-    const res = await fetch(`${API_BASE}${url}`, {
-      method: 'DELETE',
-    });
-    return handleResponse(res);
-  },
-};
-
-async function handleResponse(res: Response) {
-  const contentType = res.headers.get('content-type');
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || 'Request failed');
-  }
-
-  if (contentType && contentType.includes('application/json')) {
-    return res.json();
-  }
-
-  return res.text();
-}
+import { api } from '../utils/api';
 interface Driver {
   id: string;
   name: string;
@@ -140,7 +93,7 @@ export default function AdminDrivers() {
       const params = new URLSearchParams();
       if (searchQuery.trim()) params.set('search', searchQuery.trim());
       params.set('status', statusFilter);
-      const response = await fetch(`${API_BASE}/api/admin/drivers?${params.toString()}`);
+      const response = await api.get(`/api/admin/drivers?${params.toString()}`);
       if (!response.ok) throw new Error('Failed to fetch drivers');
       const data = await response.json();
       setDrivers(data);
@@ -178,7 +131,7 @@ export default function AdminDrivers() {
   };
 
   const handleApprove = async (id: string) => {
-    const response = await fetch(`${API_BASE}/api/admin/drivers/${id}/approve`, { method: 'PATCH' });
+    const response = await api.patch(`/api/admin/drivers/${id}/approve`);
     if (!response.ok) {
       alert('Failed to approve driver');
       return;
@@ -188,7 +141,7 @@ export default function AdminDrivers() {
 
   const handleReject = async (id: string) => {
     if (confirm('Are you sure you want to reject this driver?')) {
-      const response = await fetch(`${API_BASE}/api/admin/drivers/${id}/approve`, { method: 'DELETE' });
+      const response = await api.delete(`/api/admin/drivers/${id}`);
       if (!response.ok) {
         alert('Failed to reject driver');
         return;
@@ -199,7 +152,7 @@ export default function AdminDrivers() {
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this driver?')) {
-      const response = await fetch(`${API_BASE}/api/admin/drivers/${id}/approve`, { method: 'DELETE' });
+      const response = await api.delete(`/api/admin/drivers/${id}`);
       if (!response.ok) {
         alert('Failed to delete driver');
         return;
@@ -209,7 +162,7 @@ export default function AdminDrivers() {
   };
 
   const toggleStatus = async (id: string) => {
-    const response = await fetch(`${API_BASE}/api/admin/drivers/${id}/toggle-status`, { method: 'PATCH' });
+    const response = await api.patch(`/api/admin/drivers/${id}/toggle-status`);
     if (!response.ok) {
       alert('Failed to update status');
       return;
@@ -249,17 +202,13 @@ export default function AdminDrivers() {
     const vehicleNumber = prompt('Vehicle number');
     if (!vehicleNumber) return;
 
-    const response = await fetch(`${API_BASE}/api/admin/drivers`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name,
-        email,
-        phone,
-        vehicleType,
-        vehicleNumber,
-        status: 'pending',
-      }),
+    const response = await api.post('/api/admin/drivers', {
+      name,
+      email,
+      phone,
+      vehicleType,
+      vehicleNumber,
+      status: 'pending',
     });
     if (!response.ok) {
       const message = await getErrorMessage(response);

@@ -133,7 +133,7 @@ export default function RestaurantDashboard() {
       const loadRestaurantName = async () => {
         try {
           if (user.email && user.role) {
-            const authResponse = await fetch('${API_BASE}/api/auth/user', {
+            const authResponse = await fetch(`${API_BASE}/api/auth/user`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ email: user.email, role: user.role }),
@@ -153,7 +153,7 @@ export default function RestaurantDashboard() {
             }
           }
 
-          const response = await fetch('${API_BASE}/api/restaurants');
+          const response = await fetch(`${API_BASE}/api/restaurants`);
           if (!response.ok) {
             setRestaurantName(fallbackRestaurantName);
             return;

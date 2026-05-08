@@ -258,7 +258,7 @@ export default function AdminRestaurants() {
     if (!addressLine1) return;
     const imageUrl = prompt('Restaurant image URL (optional)') || '';
 
-    const response = await fetch('${API_BASE}/api/admin/restaurants', {
+    const response = await fetch(`${API_BASE}/api/admin/restaurants`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

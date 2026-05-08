@@ -132,7 +132,7 @@ export default function DriverDashboard() {
       }
 
       try {
-        const response = await fetch('${API_BASE}/api/drivers/available');
+        const response = await fetch(`${API_BASE}/api/drivers/available`);
         if (!response.ok) return;
         const data = await response.json();
         const matchedDriver = data.find((item: { id: string; name: string }) => item.id === driverId);

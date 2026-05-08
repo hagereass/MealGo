@@ -136,7 +136,7 @@ export default function RestaurantOrders() {
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await fetch('${API_BASE}/api/drivers/available');
+        const response = await fetch(`${API_BASE}/api/drivers/available`);
         if (!response.ok) return;
         const data = await response.json();
         setDrivers(data);

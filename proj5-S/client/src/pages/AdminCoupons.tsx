@@ -162,7 +162,7 @@ export default function AdminCoupons() {
     if (!walletAddress) return;
 
     try {
-      const response = await fetch('${API_BASE}/api/admin/create-coupon', {
+      const response = await fetch(`${API_BASE}/api/admin/create-coupon`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
