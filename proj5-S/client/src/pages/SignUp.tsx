@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { Mail, Lock, User, Building, Bike, CheckCircle2, Circle, Eye, EyeOff } from 'lucide-react';
 import { setCurrentUserSession } from '../utils/session';
 import { getPasswordIssues, isPasswordStrong, passwordRequirements } from '../utils/passwordRules';
-import { api } from '../utils/api';
+import { api, getApiBaseUrl } from '../utils/api';
 type UserRole = 'customer' | 'restaurant' | 'driver';
 
 export default function SignUp() {
@@ -76,7 +76,7 @@ export default function SignUp() {
       alert('Please choose an account type first');
       return;
     }
-    window.location.href = `/auth/google/start?mode=signup&role=${encodeURIComponent(formData.role)}`;
+    window.location.href = `${getApiBaseUrl()}/auth/google/start?mode=signup&role=${encodeURIComponent(formData.role)}`;
   };
 
   const handleSignUp = async (e: React.FormEvent) => {

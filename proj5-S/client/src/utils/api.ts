@@ -1,5 +1,5 @@
 // API utility to handle base URL based on environment
-const getApiBaseUrl = (): string => {
+export const getApiBaseUrl = (): string => {
   // Production: use Vercel environment variable
   if (import.meta.env.PROD) {
     return import.meta.env.VITE_API_URL || 'https://mealgo-production.up.railway.app';

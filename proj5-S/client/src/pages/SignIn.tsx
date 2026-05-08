@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { Mail, Lock, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { setCurrentUserSession } from '../utils/session';
-import { api } from '../utils/api';
+import { api, getApiBaseUrl } from '../utils/api';
 type SignInRole = 'customer' | 'admin' | 'restaurant' | 'driver';
 
 export default function SignIn() {
@@ -218,7 +218,7 @@ export default function SignIn() {
       setError('Google sign in is not available for admin');
       return;
     }
-    window.location.href = `/auth/google/start?mode=signin&role=${encodeURIComponent(selectedRole)}`;
+    window.location.href = `${getApiBaseUrl()}/auth/google/start?mode=signin&role=${encodeURIComponent(selectedRole)}`;
   };
 
   return (
