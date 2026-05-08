@@ -8,7 +8,7 @@ async function main() {
   const pk = process.env.PRIVATE_KEY;
   if (!pk) throw new Error('PRIVATE_KEY is not set in .env');
 
-  const provider = new ethers.JsonRpcProvider(rpc);
+ const provider = new ethers.providers.JsonRpcProvider(rpc);
   const wallet = new ethers.Wallet(pk, provider);
 
   const artifactPath = path.join(__dirname, 'artifacts', 'contracts', 'CouponNFT.sol', 'CouponNFT.json');
@@ -21,9 +21,11 @@ async function main() {
   const factory = new ethers.ContractFactory(artifact.abi, artifact.bytecode, wallet);
   console.log('Deploying CouponNFT via RPC:', rpc);
   // let ethers estimate gas automatically to avoid exceeding block gas limit
-  const contract = await factory.deploy();
-  await contract.waitForDeployment();
-  const deployedAddress = await contract.getAddress();
+  const contract = await factory.deploy({
+  gasLimit: 3000000
+});
+  await contract.deployed();
+  const deployedAddress = contract.address;
   console.log('NFT deployed at:', deployedAddress);
   
   // Update .env
