@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const { promisify } = require('util');
 
 const app = express();
-const port = Number(process.env.API_PORT || 4000);
+const port = Number(process.env.PORT || process.env.API_PORT || 4000);
 
 // CORS configuration - allow Vercel domains (including preview), localhost, and CLIENT_URL
 const corsOriginMatcher = (origin, callback) => {
