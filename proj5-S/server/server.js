@@ -10,12 +10,18 @@ const app = express();
 // CORS (Frontend Vercel)
 app.use(cors({
   origin: [
-    "https://meal-go-git-main-jhk442550-9902s-projects.vercel.app",
-    "https://meal-go-alpha.vercel.app",
-    "http://localhost:5173"
+    'https://meal-go-reg7.vercel.app',
+    'https://meal-go-git-main-jhk442550-9902s-projects.vercel.app',
+    process.env.CLIENT_URL || 'http://localhost:3000',
+    'http://localhost:3000',
+    'http://localhost:5173'
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+app.options('*', cors());
 
 app.use(express.json());
 app.use(bodyParser.json());
