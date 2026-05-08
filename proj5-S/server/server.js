@@ -12,13 +12,12 @@ app.use(cors({
   origin: [
     'https://meal-go-reg7.vercel.app',
     'https://meal-go-git-main-jhk442550-9902s-projects.vercel.app',
-    process.env.CLIENT_URL || 'http://localhost:3000',
-    'http://localhost:3000',
+    'https://meal-go-alpha.vercel.app',
     'http://localhost:5173'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.options('*', cors());

@@ -8,10 +8,12 @@ const { promisify } = require('util');
 const app = express();
 const port = Number(process.env.API_PORT || 4000);
 
-// CORS configuration - allow Vercel frontend and localhost
+// CORS configuration - allow all Vercel frontend URLs and localhost
 const ALLOWED_ORIGINS = [
   'https://meal-go-reg7.vercel.app',
-  process.env.CLIENT_URL || 'http://localhost:3000',
+  'https://meal-go-git-main-jhk442550-9902s-projects.vercel.app',
+  'https://meal-go-alpha.vercel.app',
+  process.env.CLIENT_URL?.replace(/^\/\//, 'https://') || 'https://localhost:3000',
   'http://localhost:3000',
   'http://localhost:5173'
 ];

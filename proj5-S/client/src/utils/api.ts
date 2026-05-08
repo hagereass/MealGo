@@ -2,7 +2,7 @@
 const getApiBaseUrl = (): string => {
   // Production: use Vercel environment variable
   if (import.meta.env.PROD) {
-    return import.meta.env.VITE_API_URL || 'https://your-railway-backend.up.railway.app';
+    return import.meta.env.VITE_API_URL || 'https://mealgo-production.up.railway.app';
   }
 
   // Development: use localhost
