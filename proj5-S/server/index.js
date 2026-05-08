@@ -10,8 +10,7 @@ const port = Number(process.env.API_PORT || 4000);
 
 // CORS configuration - allow Vercel frontend and localhost
 const ALLOWED_ORIGINS = [
-  'https://meal-go-git-main-jhk442550-9902s-projects.vercel.app',
-  'https://meal-go-alpha.vercel.app',
+  'https://meal-go-reg7.vercel.app',
   process.env.CLIENT_URL || 'http://localhost:3000',
   'http://localhost:3000',
   'http://localhost:5173'
