@@ -170,8 +170,9 @@ export default function SignIn() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: pendingCredentials.id, code: twoFACode }),
       });
+
       if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
+        const err = await response.json();
         setError(err.message || 'Invalid 2FA code');
         return;
       }
