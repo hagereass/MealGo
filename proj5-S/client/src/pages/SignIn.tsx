@@ -169,7 +169,10 @@ export default function SignIn() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: pendingCredentials.id, code: twoFACode }),
-      });api.post('/api/auth/verify-2fa', { userId: pendingCredentials.id, code: twoFACode   setError(err.message || 'Invalid 2FA code');
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        setError(err.message || 'Invalid 2FA code');
         return;
       }
 
