@@ -13,10 +13,17 @@ const ALLOWED_ORIGINS = [
   'https://meal-go-reg7.vercel.app',
   'https://meal-go-git-main-jhk442550-9902s-projects.vercel.app',
   'https://meal-go-alpha.vercel.app',
-  process.env.CLIENT_URL?.replace(/^\/\//, 'https://') || 'https://localhost:3000',
   'http://localhost:3000',
   'http://localhost:5173'
 ];
+
+// Add CLIENT_URL if set (and clean it)
+if (process.env.CLIENT_URL) {
+  const cleanUrl = process.env.CLIENT_URL.replace(/^\/\//, 'https://').trim();
+  if (cleanUrl && !ALLOWED_ORIGINS.includes(cleanUrl)) {
+    ALLOWED_ORIGINS.push(cleanUrl);
+  }
+}
 
 app.use(cors({
   origin: ALLOWED_ORIGINS,
@@ -3310,18 +3317,24 @@ app.get('/api/auth/oauth/complete', (req, res) => {
 });
 
 const startServer = async () => {
-  // Start server first, initialize DB in background
-  app.listen(port, () => {
-    console.log(`MealGo API server running on http://localhost:${port}`);
-  });
-
-  // Try to ensure DB columns in background (non-blocking)
   try {
-    await ensureRestaurantImageColumn();
-    console.log('✅ Database columns verified');
+    // Start server first, initialize DB in background
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`🚀 MealGo API server running on http://0.0.0.0:${port}`);
+      console.log(`✅ CORS Allowed Origins:`, ALLOWED_ORIGINS);
+    });
+
+    // Try to ensure DB columns in background (non-blocking)
+    try {
+      await ensureRestaurantImageColumn();
+      console.log('✅ Database columns verified');
+    } catch (error) {
+      console.warn('⚠️ Database initialization deferred:', error.message);
+      // Don't crash - database operations will fail gracefully with proper errors
+    }
   } catch (error) {
-    console.warn('⚠️ Database initialization deferred:', error.message);
-    // Don't crash - database operations will fail gracefully with proper errors
+    console.error('❌ FATAL: Failed to start server:', error.message);
+    process.exit(1);
   }
 };
 
