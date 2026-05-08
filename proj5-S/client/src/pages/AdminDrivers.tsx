@@ -162,7 +162,7 @@ export default function AdminDrivers() {
   };
 
   const toggleStatus = async (id: string) => {
-    const response = await fetch(`/api/admin/drivers/${id}/toggle-status`, { method: 'PATCH' });
+    const response = await fetch(`${API_BASE}/api/admin/drivers/${id}/toggle-status`, { method: 'PATCH' });
     if (!response.ok) {
       alert('Failed to update status');
       return;
@@ -202,7 +202,7 @@ export default function AdminDrivers() {
     const vehicleNumber = prompt('Vehicle number');
     if (!vehicleNumber) return;
 
-    const response = await fetch('/api/admin/drivers', {
+    const response = await fetch(`${API_BASE}/api/admin/drivers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
