@@ -9,7 +9,11 @@ const app = express();
 
 // CORS (Frontend Vercel)
 app.use(cors({
-  origin: "https://meal-go-alpha.vercel.app",
+  origin: [
+    "https://meal-go-git-main-jhk442550-9902s-projects.vercel.app",
+    "https://meal-go-alpha.vercel.app",
+    "http://localhost:5173"
+  ],
   credentials: true
 }));
 
