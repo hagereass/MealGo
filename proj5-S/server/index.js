@@ -8,31 +8,46 @@ const { promisify } = require('util');
 const app = express();
 const port = Number(process.env.API_PORT || 4000);
 
-// CORS configuration - allow all Vercel frontend URLs and localhost
-const ALLOWED_ORIGINS = [
-  'https://meal-go-reg7.vercel.app',
-  'https://meal-go-git-main-jhk442550-9902s-projects.vercel.app',
-  'https://meal-go-alpha.vercel.app',
-  'http://localhost:3000',
-  'http://localhost:5173'
-];
+// CORS configuration - allow Vercel domains (including preview), localhost, and CLIENT_URL
+const corsOriginMatcher = (origin, callback) => {
+  // List of explicitly allowed localhost/development origins
+  const LOCALHOST_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5173'
+  ];
 
-// Add CLIENT_URL if set (and clean it)
-if (process.env.CLIENT_URL) {
-  const cleanUrl = process.env.CLIENT_URL.replace(/^\/\//, 'https://').trim();
-  if (cleanUrl && !ALLOWED_ORIGINS.includes(cleanUrl)) {
-    ALLOWED_ORIGINS.push(cleanUrl);
+  // Allow localhost/development
+  if (!origin || LOCALHOST_ORIGINS.includes(origin)) {
+    return callback(null, true);
   }
-}
+
+  // Allow any *.vercel.app domain (production + all preview deployments)
+  if (origin && origin.match(/^https:\/\/.*\.vercel\.app$/i)) {
+    return callback(null, true);
+  }
+
+  // Allow CLIENT_URL if set
+  if (process.env.CLIENT_URL) {
+    const clientUrl = process.env.CLIENT_URL.replace(/^\/\//, 'https://').trim();
+    if (origin === clientUrl) {
+      return callback(null, true);
+    }
+  }
+
+  // Deny all other origins
+  callback(new Error('CORS not allowed for this origin'));
+};
 
 app.use(cors({
-  origin: ALLOWED_ORIGINS,
+  origin: corsOriginMatcher,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-app.options('*', cors());
+app.options('*', cors({ origin: corsOriginMatcher }));
 
 app.use(express.json());
 
@@ -3321,7 +3336,7 @@ const startServer = async () => {
     // Start server first, initialize DB in background
     app.listen(port, '0.0.0.0', () => {
       console.log(`🚀 MealGo API server running on http://0.0.0.0:${port}`);
-      console.log(`✅ CORS Allowed Origins:`, ALLOWED_ORIGINS);
+      console.log(`✅ CORS enabled for: *.vercel.app (all Vercel deployments), localhost, and CLIENT_URL`);
     });
 
     // Try to ensure DB columns in background (non-blocking)
