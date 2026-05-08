@@ -2,7 +2,54 @@ import { useEffect, useMemo, useState } from 'react';
 import { Navbar } from '../components/Navbar';
 import { Search, User, Truck, Clock, MapPin, Phone } from 'lucide-react';
 import { getRoleSession, setCurrentUserSession } from '../utils/session';
+const API_BASE = 'https://mealgo-production.up.railway.app';
 
+export const api = {
+  get: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`);
+    return handleResponse(res);
+  },
+
+  post: async (url: string, body: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return handleResponse(res);
+  },
+
+  patch: async (url: string, body?: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    return handleResponse(res);
+  },
+
+  delete: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'DELETE',
+    });
+    return handleResponse(res);
+  },
+};
+
+async function handleResponse(res: Response) {
+  const contentType = res.headers.get('content-type');
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || 'Request failed');
+  }
+
+  if (contentType && contentType.includes('application/json')) {
+    return res.json();
+  }
+
+  return res.text();
+}
 interface Order {
   id: string;
   orderNumber: string;
@@ -69,7 +116,7 @@ export default function RestaurantOrders() {
       if (searchQuery.trim()) params.set('search', searchQuery.trim());
       params.set('status', statusFilter);
 
-      const response = await fetch(`/api/restaurants/${restaurantId}/orders?${params.toString()}`);
+      const response = await fetch(`${API_BASE}/api/restaurants/${restaurantId}/orders?${params.toString()}`);
       if (!response.ok) throw new Error('Failed to fetch orders');
       const data = await response.json();
       setOrders(data);
@@ -89,7 +136,7 @@ export default function RestaurantOrders() {
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await fetch('/api/drivers/available');
+        const response = await fetch('${API_BASE}/api/drivers/available');
         if (!response.ok) return;
         const data = await response.json();
         setDrivers(data);
@@ -166,7 +213,7 @@ export default function RestaurantOrders() {
 
     try {
       setSavingOrderId(orderId);
-      const response = await fetch(`/api/restaurants/${restaurantId}/orders/${orderId}/status`, {
+      const response = await fetch(`${API_BASE}/api/restaurants/${restaurantId}/orders/${orderId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: nextStatus }),
@@ -203,7 +250,7 @@ export default function RestaurantOrders() {
 
     try {
       setAssigningOrderId(orderId);
-      const response = await fetch(`/api/restaurants/${restaurantId}/orders/${orderId}/assign-driver`, {
+      const response = await fetch(`${API_BASE}/api/restaurants/${restaurantId}/orders/${orderId}/assign-driver`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ driverId }),

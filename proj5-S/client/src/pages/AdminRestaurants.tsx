@@ -2,7 +2,54 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { AdminSidebar } from '../components/AdminSidebar';
 import { Search, Plus, MapPin, Star, Edit, Trash2, Check, X } from 'lucide-react';
+const API_BASE = 'https://mealgo-production.up.railway.app';
 
+export const api = {
+  get: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`);
+    return handleResponse(res);
+  },
+
+  post: async (url: string, body: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return handleResponse(res);
+  },
+
+  patch: async (url: string, body?: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    return handleResponse(res);
+  },
+
+  delete: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'DELETE',
+    });
+    return handleResponse(res);
+  },
+};
+
+async function handleResponse(res: Response) {
+  const contentType = res.headers.get('content-type');
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || 'Request failed');
+  }
+
+  if (contentType && contentType.includes('application/json')) {
+    return res.json();
+  }
+
+  return res.text();
+}
 interface Restaurant {
   id: string;
   name: string;
@@ -95,7 +142,7 @@ export default function AdminRestaurants() {
       const params = new URLSearchParams();
       if (searchQuery.trim()) params.set('search', searchQuery.trim());
       params.set('status', statusFilter);
-      const response = await fetch(`/api/admin/restaurants?${params.toString()}`);
+      const response = await fetch(`${API_BASE}/api/admin/restaurants?${params.toString()}`);
       if (!response.ok) throw new Error('Failed to fetch restaurants');
       const data = await response.json();
       setRestaurants(data);
@@ -129,7 +176,7 @@ export default function AdminRestaurants() {
   }), [restaurants]);
 
   const handleApprove = async (id: string) => {
-    const response = await fetch(`/api/admin/restaurants/${id}/approve`, { method: 'PATCH' });
+    const response = await fetch(`${API_BASE}/api/admin/restaurants/${id}/approve`, { method: 'PATCH' });
     if (!response.ok) {
       alert('Failed to approve restaurant');
       return;
@@ -139,7 +186,7 @@ export default function AdminRestaurants() {
 
   const handleReject = async (id: string) => {
     if (confirm('Are you sure you want to reject this restaurant?')) {
-      const response = await fetch(`/api/admin/restaurants/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${API_BASE}/api/admin/restaurants/${id}`, { method: 'DELETE' });
       if (!response.ok) {
         alert('Failed to reject restaurant');
         return;
@@ -150,7 +197,7 @@ export default function AdminRestaurants() {
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this restaurant?')) {
-      const response = await fetch(`/api/admin/restaurants/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${API_BASE}/api/admin/restaurants/${id}`, { method: 'DELETE' });
       if (!response.ok) {
         alert('Failed to delete restaurant');
         return;
@@ -163,7 +210,7 @@ export default function AdminRestaurants() {
     const imageUrl = prompt('Restaurant image URL', restaurant.image || '');
     if (imageUrl === null) return;
 
-    const response = await fetch(`/api/admin/restaurants/${restaurant.id}/image`, {
+    const response = await fetch(`${API_BASE}/api/admin/restaurants/${restaurant.id}/image`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ imageUrl }),
@@ -211,7 +258,7 @@ export default function AdminRestaurants() {
     if (!addressLine1) return;
     const imageUrl = prompt('Restaurant image URL (optional)') || '';
 
-    const response = await fetch('/api/admin/restaurants', {
+    const response = await fetch('${API_BASE}/api/admin/restaurants', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

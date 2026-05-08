@@ -2,6 +2,55 @@ import { useEffect, useState } from 'react';
 import { Navbar } from '../components/Navbar';
 import { DollarSign, Package, Clock, MapPin, Phone, Navigation } from 'lucide-react';
 
+const API_BASE = 'https://mealgo-production.up.railway.app';
+
+export const api = {
+  get: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`);
+    return handleResponse(res);
+  },
+
+  post: async (url: string, body: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return handleResponse(res);
+  },
+
+  patch: async (url: string, body?: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    return handleResponse(res);
+  },
+
+  delete: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'DELETE',
+    });
+    return handleResponse(res);
+  },
+};
+
+async function handleResponse(res: Response) {
+  const contentType = res.headers.get('content-type');
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || 'Request failed');
+  }
+
+  if (contentType && contentType.includes('application/json')) {
+    return res.json();
+  }
+
+  return res.text();
+}
+
 interface DriverRequest {
   assignmentId: string;
   orderId: string;
@@ -83,7 +132,7 @@ export default function DriverDashboard() {
       }
 
       try {
-        const response = await fetch('/api/drivers/available');
+        const response = await fetch('${API_BASE}/api/drivers/available');
         if (!response.ok) return;
         const data = await response.json();
         const matchedDriver = data.find((item: { id: string; name: string }) => item.id === driverId);
@@ -108,7 +157,7 @@ export default function DriverDashboard() {
 
     try {
       if (!silent) setIsLoading(true);
-      const response = await fetch(`/api/driver/dashboard?driverId=${encodeURIComponent(driverId)}`);
+      const response = await fetch(`${API_BASE}/api/driver/dashboard?driverId=${encodeURIComponent(driverId)}`);
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
         throw new Error(payload.message || 'Failed to load driver dashboard');
@@ -151,7 +200,7 @@ export default function DriverDashboard() {
     if (!request) return;
     try {
       setBusyAction(request.assignmentId);
-      const response = await fetch(`/api/driver/assignments/${request.assignmentId}/respond`, {
+      const response = await fetch(`${API_BASE}/api/driver/assignments/${request.assignmentId}/respond`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ decision }),
@@ -172,7 +221,7 @@ export default function DriverDashboard() {
     if (!driverId) return;
     try {
       setBusyAction(orderId);
-      const response = await fetch(`/api/driver/orders/${orderId}/status`, {
+      const response = await fetch(`${API_BASE}/api/driver/orders/${orderId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ driverId, status: 'delivered' }),

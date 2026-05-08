@@ -2,6 +2,54 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { AdminSidebar } from '../components/AdminSidebar';
 import { ArrowLeft, Mail, Phone, Save, ShieldCheck, User as UserIcon } from 'lucide-react';
+const API_BASE = 'https://mealgo-production.up.railway.app';
+
+export const api = {
+  get: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`);
+    return handleResponse(res);
+  },
+
+  post: async (url: string, body: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return handleResponse(res);
+  },
+
+  patch: async (url: string, body?: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    return handleResponse(res);
+  },
+
+  delete: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'DELETE',
+    });
+    return handleResponse(res);
+  },
+};
+
+async function handleResponse(res: Response) {
+  const contentType = res.headers.get('content-type');
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || 'Request failed');
+  }
+
+  if (contentType && contentType.includes('application/json')) {
+    return res.json();
+  }
+
+  return res.text();
+}
 
 type UserRole = 'customer' | 'driver' | 'restaurant';
 type UserStatus = 'active' | 'inactive' | 'suspended';
@@ -44,7 +92,7 @@ export default function AdminUserEdit() {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await fetch(`/api/admin/users/${userId}`);
+        const response = await fetch(`${API_BASE}/api/admin/users/${userId}`);
         const payload = await response.json().catch(() => ({}));
 
         if (!response.ok) {
@@ -80,7 +128,7 @@ export default function AdminUserEdit() {
       setIsSaving(true);
       setError(null);
 
-      const response = await fetch(`/api/admin/users/${userId}`, {
+      const response = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

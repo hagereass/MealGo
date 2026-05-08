@@ -4,7 +4,54 @@ import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { Search, Plus, Edit2, Trash2, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { getRoleSession, setCurrentUserSession } from '../utils/session';
+const API_BASE = 'https://mealgo-production.up.railway.app';
 
+export const api = {
+  get: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`);
+    return handleResponse(res);
+  },
+
+  post: async (url: string, body: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return handleResponse(res);
+  },
+
+  patch: async (url: string, body?: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    return handleResponse(res);
+  },
+
+  delete: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'DELETE',
+    });
+    return handleResponse(res);
+  },
+};
+
+async function handleResponse(res: Response) {
+  const contentType = res.headers.get('content-type');
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || 'Request failed');
+  }
+
+  if (contentType && contentType.includes('application/json')) {
+    return res.json();
+  }
+
+  return res.text();
+}
 interface MenuItem {
   id: string;
   name: string;
@@ -63,7 +110,7 @@ export default function RestaurantMenu() {
     const fetchItems = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/restaurants/${restaurantId}/menu/items`);
+        const response = await fetch(`${API_BASE}/api/restaurants/${restaurantId}/menu/items`);
         const data = await response.json();
         setItems(data.map((item: any) => ({
           id: item.id,
@@ -94,7 +141,7 @@ export default function RestaurantMenu() {
     }
 
     try {
-      const response = await fetch(`/api/restaurants/${restaurantId}/menu/items`, {
+      const response = await fetch(`${API_BASE}/api/restaurants/${restaurantId}/menu/items`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -124,7 +171,7 @@ export default function RestaurantMenu() {
     }
 
     try {
-      const response = await fetch(`/api/restaurants/${restaurantId}/menu/items/${editingItem.id}`, {
+      const response = await fetch(`${API_BASE}/api/restaurants/${restaurantId}/menu/items/${editingItem.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -149,7 +196,7 @@ export default function RestaurantMenu() {
     if (!confirm('Are you sure you want to delete this item?')) return;
 
     try {
-      await fetch(`/api/restaurants/${restaurantId}/menu/items/${id}`, {
+      await fetch(`${API_BASE}/api/restaurants/${restaurantId}/menu/items/${id}`, {
         method: 'DELETE'
       });
       setItems(items.filter(item => item.id !== id));
@@ -161,7 +208,7 @@ export default function RestaurantMenu() {
 
   const toggleAvailability = async (item: MenuItem) => {
     try {
-      const response = await fetch(`/api/restaurants/${restaurantId}/menu/items/${item.id}`, {
+      const response = await fetch(`${API_BASE}/api/restaurants/${restaurantId}/menu/items/${item.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ available: !item.available })

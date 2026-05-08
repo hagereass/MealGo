@@ -4,6 +4,55 @@ import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { Search, Filter, Star, Clock, ShoppingBag, Plus, Minus, X, ChevronRight, Bike } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
+const API_BASE = 'https://mealgo-production.up.railway.app';
+
+export const api = {
+  get: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`);
+    return handleResponse(res);
+  },
+
+  post: async (url: string, body: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return handleResponse(res);
+  },
+
+  patch: async (url: string, body?: any) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    return handleResponse(res);
+  },
+
+  delete: async (url: string) => {
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'DELETE',
+    });
+    return handleResponse(res);
+  },
+};
+
+async function handleResponse(res: Response) {
+  const contentType = res.headers.get('content-type');
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || 'Request failed');
+  }
+
+  if (contentType && contentType.includes('application/json')) {
+    return res.json();
+  }
+
+  return res.text();
+}
+
 interface MenuItem {
   id: string;
   name: string;
@@ -71,7 +120,7 @@ export default function CustomerOrdering() {
       try {
         setLoading(true);
         // Fetch all restaurants
-        const restResponse = await fetch('/api/restaurants');
+        const restResponse = await fetch('${API_BASE}/api/restaurants');
         if (!restResponse.ok) {
           throw new Error('Failed to load restaurants');
         }
@@ -97,7 +146,7 @@ export default function CustomerOrdering() {
         let allItems: MenuItem[] = [];
         for (const restaurant of restData) {
           try {
-            const itemsResponse = await fetch(`/api/restaurants/${restaurant.id}/menu/items`);
+            const itemsResponse = await fetch(`${API_BASE}/api/restaurants/${restaurant.id}/menu/items`);
             if (!itemsResponse.ok) {
               continue;
             }
@@ -151,7 +200,7 @@ export default function CustomerOrdering() {
       }
 
       try {
-        const response = await fetch(`/api/restaurants/${selectedRestaurant}/reviews`);
+        const response = await fetch(`${API_BASE}/api/restaurants/${selectedRestaurant}/reviews`);
         if (!response.ok) {
           setSelectedRestaurantReviews([]);
           return;
