@@ -150,7 +150,7 @@ export function Navbar({ role, isLoggedIn = false }: NavbarProps) {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-4">
+          <div className="navbar-actions flex items-center gap-4">
             {!role && !isLoggedIn && (
               <>
                 <Link

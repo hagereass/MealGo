@@ -30,7 +30,7 @@ export function AdminSidebar() {
   const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(`${path}/`);
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0">
+    <div className="admin-sidebar w-64 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0">
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <h1 className="text-2xl text-[#e95322]">MealGo</h1>
