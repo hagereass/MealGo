@@ -263,14 +263,6 @@ export default function OrderTracking() {
     ? new Date(order.estimatedDelivery).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
     : '25-35 min';
 
-  const handleGoBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-      return;
-    }
-    navigate('/');
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b border-gray-200">
@@ -366,7 +358,6 @@ export default function OrderTracking() {
 
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
               <h3 className="text-lg mb-6">Order Status</h3>
-
               <div className="relative">
                 <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-gray-200" />
                 {order.status !== 'cancelled' && (
@@ -375,7 +366,6 @@ export default function OrderTracking() {
                     style={{ height: `${(currentStatusIndex / (statusSteps.length - 1)) * 100}%` }}
                   />
                 )}
-
                 <div className="relative space-y-8">
                   {statusesWithTime.map((status, index) => (
                     <div key={status.key} className="flex items-start gap-4">
@@ -397,7 +387,6 @@ export default function OrderTracking() {
                       </div>
                     </div>
                   ))}
-
                   {order.status === 'cancelled' && (
                     <div className="flex items-start gap-4">
                       <div className="relative z-10 w-12 h-12 rounded-full flex items-center justify-center bg-red-500">
@@ -418,30 +407,20 @@ export default function OrderTracking() {
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-              <div className="relative h-64 bg-gradient-to-br from-blue-100 to-green-100">
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.deliveryAddress)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative h-64 bg-gradient-to-br from-blue-100 to-green-100 flex items-center justify-center flex-col gap-3 cursor-pointer hover:opacity-90 transition block"
+              >
                 <div className="absolute top-4 left-4 bg-white px-3 py-2 rounded-full shadow-md flex items-center gap-2 text-sm">
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                   Live Tracking
                 </div>
-            
-  <a
-  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order?.deliveryAddress || "")}`}  target="_blank"
-  rel="noopener noreferrer"
-  className="relative h-64 bg-gradient-to-br from-blue-100 to-green-100 flex items-center justify-center flex-col gap-3 cursor-pointer hover:opacity-90 transition block"
->
-  <div className="absolute top-4 left-4 bg-white px-3 py-2 rounded-full shadow-md flex items-center gap-2 text-sm">
-    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-    Live Tracking
-  </div>
-
-  <MapPin className="w-16 h-16 text-[#e95322]" />
-
-  <p className="text-gray-600 text-sm">
-    Click to open Google Maps
-  </p>
-</a>
-          
-            
+                <MapPin className="w-16 h-16 text-[#e95322]" />
+                <p className="text-gray-600 text-sm">Click to open Google Maps</p>
+              </a>
+            </div>
 
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
               <h3 className="text-lg mb-4">Your Delivery Partner</h3>
@@ -482,7 +461,6 @@ export default function OrderTracking() {
                     </span>
                   )}
                 </div>
-
                 <div className="flex items-center gap-2 mb-4">
                   {[1, 2, 3, 4, 5].map((value) => (
                     <button
@@ -498,20 +476,17 @@ export default function OrderTracking() {
                     </button>
                   ))}
                 </div>
-
                 <textarea
                   value={reviewComment}
                   onChange={(e) => setReviewComment(e.target.value)}
                   placeholder="Write feedback for the restaurant..."
                   className="w-full min-h-[120px] rounded-2xl border border-gray-200 px-4 py-3 outline-none transition focus:border-[#e95322]"
                 />
-
                 {reviewMessage && (
                   <div className={`mt-4 text-sm ${reviewMessage.includes('Thanks') ? 'text-green-600' : 'text-red-600'}`}>
                     {reviewMessage}
                   </div>
                 )}
-
                 <button
                   onClick={handleSubmitReview}
                   disabled={isSavingReview}
@@ -524,7 +499,6 @@ export default function OrderTracking() {
 
             <div className="bg-white rounded-2xl shadow-sm p-6">
               <h3 className="text-lg mb-4">Delivery Details</h3>
-
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-[#fef2ef] rounded-full flex items-center justify-center mt-1">
@@ -536,7 +510,6 @@ export default function OrderTracking() {
                     <div className="text-sm text-gray-600">{order.deliveryCity || 'Unknown City'}</div>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-[#fef2ef] rounded-full flex items-center justify-center mt-1">
                     <ClockIcon className="w-5 h-5 text-[#e95322]" />
