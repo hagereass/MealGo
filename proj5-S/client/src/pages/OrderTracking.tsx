@@ -435,11 +435,10 @@ export default function OrderTracking() {
   </div>
   <MapPin className="w-16 h-16 text-[#e95322]" />
   <p className="text-gray-600 text-sm">Click to open Google Maps</p>
-</a>
+  </a>
 
               </div>
-              </div>
-
+          
             
 
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
