@@ -431,7 +431,7 @@ export default function OrderTracking() {
                   style={{ border: 0 }}
                   loading="lazy"
                   allowFullScreen
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(order.deliveryAddress)}&layer=mapnik&marker=0,0`}
+                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(order.deliveryAddress)}`}
               />  
 
               </div>
