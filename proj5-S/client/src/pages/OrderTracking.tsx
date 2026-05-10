@@ -419,22 +419,23 @@ export default function OrderTracking() {
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-              <di className="relative h-64 bg-gradient-to-br from-blue-100 to-green-100">
+              <div className="relative h-64 bg-gradient-to-br from-blue-100 to-green-100">
                 <div className="absolute top-4 left-4 bg-white px-3 py-2 rounded-full shadow-md flex items-center gap-2 text-sm">
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                   Live Tracking
                 </div>
             
-      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.deliveryAddress)}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="absolute inset-0 flex items-center justify-center flex-col gap-2"
-    >
-      <MapPin className="w-12 h-12 text-[#e95322]" />
-      <p className="text-sm text-gray-600">اضغط لفتح الموقع على Google Maps</p>
-    </a>
-  </div>
-</div>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(order.deliveryAddress)}`}
+              />  
+
+              </div>
+            </div>
 
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
               <h3 className="text-lg mb-4">Your Delivery Partner</h3>
