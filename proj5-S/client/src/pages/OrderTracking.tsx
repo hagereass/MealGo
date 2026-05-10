@@ -430,7 +430,7 @@ export default function OrderTracking() {
                   style={{ border: 0 }}
                   loading="lazy"
                   allowFullScreen
-                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.AIzaSyBMAyB_WREta_LQmFaVTMD-rHC8JG_b8Sg}&q=${encodeURIComponent(order.deliveryAddress)}`}
+                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(order.deliveryAddress)}`}
               />  
 
               </div>
