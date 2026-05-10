@@ -425,8 +425,7 @@ export default function OrderTracking() {
                 </div>
             
   <a
-  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.deliveryAddress)}`}
-  target="_blank"
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order?.deliveryAddress || "Cairo Egypt")}`}
   rel="noopener noreferrer"
   className="relative h-64 bg-gradient-to-br from-blue-100 to-green-100 flex items-center justify-center flex-col gap-3 cursor-pointer hover:opacity-90 transition block"
 >
