@@ -424,17 +424,23 @@ export default function OrderTracking() {
                   Live Tracking
                 </div>
             
-                <iframe
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  allowFullScreen
-                  src={`https://www.openstreetmap.org/export/embed.html?layer=mapnik&marker=${encodeURIComponent(order.deliveryAddress)}`}
-              />  
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.deliveryAddress)}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="relative h-64 bg-gradient-to-br from-blue-100 to-green-100 flex items-center justify-center flex-col gap-3 cursor-pointer hover:opacity-90 transition block"
+>
+  <div className="absolute top-4 left-4 bg-white px-3 py-2 rounded-full shadow-md flex items-center gap-2 text-sm">
+    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+    Live Tracking
+  </div>
+  <MapPin className="w-16 h-16 text-[#e95322]" />
+  <p className="text-gray-600 text-sm">Click to open Google Maps</p>
+</a>
 
               </div>
-            </div>
+              </div>
+
+            
 
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
               <h3 className="text-lg mb-4">Your Delivery Partner</h3>
