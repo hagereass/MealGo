@@ -3,8 +3,6 @@ import { useNavigate, useLocation } from 'react-router';
 import { ChefHat, ArrowLeft, Star, Phone, MessageCircle, MapPin, Clock as ClockIcon } from 'lucide-react';
 import { getRoleSession } from '../utils/session';
 const API_BASE = 'https://mealgo-production.up.railway.app';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 export const api = {
   get: async (url: string) => {
     const res = await fetch(`${API_BASE}${url}`);
@@ -426,21 +424,17 @@ export default function OrderTracking() {
                   Live Tracking
                 </div>
             
-                <MapContainer
-      center={[30.0444, 31.2357]}
-      zoom={13}
-      style={{ height: '100%', width: '100%' }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={[30.0444, 31.2357]}>
-        <Popup>{order.deliveryAddress}</Popup>
-      </Marker>
-    </MapContainer>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  src={`https://www.openstreetmap.org/export/embed.html?layer=mapnik&marker=${encodeURIComponent(order.deliveryAddress)}`}
+              />  
 
-      </div>
-      </div>
+              </div>
+            </div>
 
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
               <h3 className="text-lg mb-4">Your Delivery Partner</h3>
