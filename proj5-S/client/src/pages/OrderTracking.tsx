@@ -267,7 +267,7 @@ export default function OrderTracking() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+          <div className="order-tracking-header flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-[#e95322] rounded-xl p-2">
                 <ChefHat className="w-6 h-6 text-white" />
@@ -285,13 +285,13 @@ export default function OrderTracking() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="order-tracking-container max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {isLoading ? (
-          <div className="bg-white rounded-2xl p-12 text-center shadow-sm">
+          <div className="order-tracking-empty bg-white rounded-2xl p-12 text-center shadow-sm">
             <p className="text-gray-600">Loading order tracking...</p>
           </div>
         ) : !order ? (
-          <div className="bg-white rounded-2xl p-12 text-center shadow-sm">
+          <div className="order-tracking-empty bg-white rounded-2xl p-12 text-center shadow-sm">
             <div className="text-2xl font-semibold mb-4">Order not found</div>
             <p className="text-gray-600 mb-6">
               We couldn't find an order with this number. Check your order history or place a new order.
@@ -315,14 +315,14 @@ export default function OrderTracking() {
           <>
             <div className="text-center mb-6">
               <div className="text-sm text-gray-600 mb-2">Tracking Order</div>
-              <h1 className="text-3xl">{order.orderNumber}</h1>
+              <h1 className="order-tracking-title text-3xl">{order.orderNumber}</h1>
               <div className="text-sm text-gray-500">
                 {new Date(order.orderTime).toLocaleDateString('en-US')}
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
-              <div className="flex items-center justify-between">
+            <div className="order-tracking-card bg-white rounded-2xl shadow-sm p-6 mb-6">
+              <div className="order-tracking-summary flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-[#e95322] rounded-full flex items-center justify-center text-white text-xl">
                     <ChefHat className="w-6 h-6" />
@@ -333,16 +333,16 @@ export default function OrderTracking() {
                     <div className="text-sm text-gray-600">{order.items} items</div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="order-tracking-total text-right">
                   <div className="text-sm text-gray-600 mb-1">Total Order Price</div>
                   <div className="text-2xl text-[#e95322]">${order.total.toFixed(2)}</div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-[#e95322] to-[#ff6b35] rounded-2xl p-8 text-white text-center mb-6">
+            <div className="order-tracking-hero bg-gradient-to-r from-[#e95322] to-[#ff6b35] rounded-2xl p-8 text-white text-center mb-6">
               <div className="text-sm opacity-90 mb-2">Current Status</div>
-              <div className="text-4xl mb-2">
+              <div className="order-tracking-status text-4xl mb-2">
                 {order.status === 'cancelled'
                   ? 'Cancelled'
                   : statusSteps.find((step) => step.key === order.status)?.label || 'Order Received'}
@@ -356,7 +356,7 @@ export default function OrderTracking() {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
+            <div className="order-tracking-card bg-white rounded-2xl shadow-sm p-6 mb-6">
               <h3 className="text-lg mb-6">Order Status</h3>
               <div className="relative">
                 <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-gray-200" />
@@ -411,7 +411,7 @@ export default function OrderTracking() {
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.deliveryAddress)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative h-64 bg-gradient-to-br from-blue-100 to-green-100 flex items-center justify-center flex-col gap-3 cursor-pointer hover:opacity-90 transition block"
+                className="order-tracking-map relative h-64 bg-gradient-to-br from-blue-100 to-green-100 flex items-center justify-center flex-col gap-3 cursor-pointer hover:opacity-90 transition block"
               >
                 <div className="absolute top-4 left-4 bg-white px-3 py-2 rounded-full shadow-md flex items-center gap-2 text-sm">
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
@@ -422,9 +422,9 @@ export default function OrderTracking() {
               </a>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
+            <div className="order-tracking-card bg-white rounded-2xl shadow-sm p-6 mb-6">
               <h3 className="text-lg mb-4">Your Delivery Partner</h3>
-              <div className="flex items-center justify-between">
+              <div className="order-tracking-partner flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#e95322] to-[#ff6b35] rounded-full flex items-center justify-center text-white text-2xl">
                     {order.driver ? order.driver.charAt(0).toUpperCase() : 'D'}
@@ -437,7 +437,7 @@ export default function OrderTracking() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="order-tracking-actions flex gap-2">
                   <button className="w-12 h-12 bg-[#fef2ef] rounded-full flex items-center justify-center hover:bg-[#ffdecf] transition-colors">
                     <Phone className="w-5 h-5 text-[#e95322]" />
                   </button>
@@ -449,8 +449,8 @@ export default function OrderTracking() {
             </div>
 
             {order.status === 'delivered' && (!order.customerId || order.customerId === userId) && (
-              <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
-                <div className="flex items-center justify-between gap-4 mb-4">
+              <div className="order-tracking-card bg-white rounded-2xl shadow-sm p-6 mb-6">
+                <div className="order-tracking-review-head flex items-center justify-between gap-4 mb-4">
                   <div>
                     <h3 className="text-lg">Rate This Restaurant</h3>
                     <p className="text-sm text-gray-600">Your rating updates the restaurant score and feedback.</p>
@@ -461,7 +461,7 @@ export default function OrderTracking() {
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 mb-4">
+                <div className="order-tracking-stars flex items-center gap-2 mb-4">
                   {[1, 2, 3, 4, 5].map((value) => (
                     <button
                       key={value}
@@ -490,14 +490,14 @@ export default function OrderTracking() {
                 <button
                   onClick={handleSubmitReview}
                   disabled={isSavingReview}
-                  className="mt-4 rounded-xl bg-[#e95322] px-5 py-3 text-white transition hover:bg-[#d14719] disabled:opacity-70"
+                    className="order-tracking-submit mt-4 rounded-xl bg-[#e95322] px-5 py-3 text-white transition hover:bg-[#d14719] disabled:opacity-70"
                 >
                   {isSavingReview ? 'Saving...' : reviewSaved ? 'Update Review' : 'Submit Review'}
                 </button>
               </div>
             )}
 
-            <div className="bg-white rounded-2xl shadow-sm p-6">
+            <div className="order-tracking-card bg-white rounded-2xl shadow-sm p-6">
               <h3 className="text-lg mb-4">Delivery Details</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">

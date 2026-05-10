@@ -2207,6 +2207,71 @@ html {
   overflow: hidden;
 }
 
+@media (max-width: 640px) {
+  .order-tracking-header {
+    gap: 1rem;
+  }
+
+  .order-tracking-container {
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .order-tracking-empty,
+  .order-tracking-card {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .order-tracking-title {
+    overflow-wrap: anywhere;
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .order-tracking-summary,
+  .order-tracking-partner,
+  .order-tracking-review-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .order-tracking-total {
+    width: 100%;
+    text-align: left;
+  }
+
+  .order-tracking-hero {
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .order-tracking-status {
+    font-size: 1.75rem;
+    line-height: 2.25rem;
+  }
+
+  .order-tracking-map {
+    height: 12rem;
+  }
+
+  .order-tracking-actions,
+  .order-tracking-submit {
+    width: 100%;
+  }
+
+  .order-tracking-actions button,
+  .order-tracking-submit {
+    flex: 1;
+  }
+
+  .order-tracking-stars {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
 @property --tw-translate-x {
   syntax: "*";
   inherits: false;
