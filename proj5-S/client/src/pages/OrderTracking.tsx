@@ -424,13 +424,14 @@ export default function OrderTracking() {
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                   Live Tracking
                 </div>
+            
                 <iframe
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   loading="lazy"
                   allowFullScreen
-                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(order.deliveryAddress)}`}
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(order.deliveryAddress)}&layer=mapnik&marker=0,0`}
               />  
 
               </div>
