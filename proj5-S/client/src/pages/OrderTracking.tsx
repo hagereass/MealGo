@@ -426,17 +426,21 @@ export default function OrderTracking() {
                   Live Tracking
                 </div>
             
-                <iframe
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  allowFullScreen
-                  src={`https://www.openstreetmap.org/export/embed.html?search=${encodeURIComponent(order.deliveryAddress)}`}
-              />  
+                <MapContainer
+      center={[30.0444, 31.2357]}
+      zoom={13}
+      style={{ height: '100%', width: '100%' }}
+    >
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={[30.0444, 31.2357]}>
+        <Popup>{order.deliveryAddress}</Popup>
+      </Marker>
+    </MapContainer>
 
-              </div>
-            </div>
+      </div>
+      </div>
 
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
               <h3 className="text-lg mb-4">Your Delivery Partner</h3>
