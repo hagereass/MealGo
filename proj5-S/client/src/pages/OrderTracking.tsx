@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router';
 import { ChefHat, ArrowLeft, Star, Phone, MessageCircle, MapPin, Clock as ClockIcon } from 'lucide-react';
 import { getRoleSession } from '../utils/session';
 const API_BASE = 'https://mealgo-production.up.railway.app';
-
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 export const api = {
   get: async (url: string) => {
     const res = await fetch(`${API_BASE}${url}`);
@@ -431,7 +432,7 @@ export default function OrderTracking() {
                   style={{ border: 0 }}
                   loading="lazy"
                   allowFullScreen
-                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(order.deliveryAddress)}`}
+                  src={`https://www.openstreetmap.org/export/embed.html?search=${encodeURIComponent(order.deliveryAddress)}`}
               />  
 
               </div>
