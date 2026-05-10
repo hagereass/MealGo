@@ -424,13 +424,15 @@ export default function OrderTracking() {
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                   Live Tracking
                 </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-gray-600">
-                    <MapPin className="w-12 h-12 text-[#e95322] mx-auto mb-2" />
-                    <p className="text-sm">Live Map View</p>
-                    <p className="text-xs">Status is synced with the restaurant updates</p>
-                  </div>
-                </div>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.AIzaSyBMAyB_WREta_LQmFaVTMD-rHC8JG_b8Sg}&q=${encodeURIComponent(order.deliveryAddress)}`}
+              />  
+
               </div>
             </div>
 

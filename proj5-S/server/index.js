@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const { promisify } = require('util');
 
 const app = express();
+app.set('trust proxy', true);
 const port = Number(process.env.PORT || process.env.API_PORT || 4000);
 
 // CORS configuration - allow Vercel domains (including preview), localhost, and CLIENT_URL
@@ -78,7 +79,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
-const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI || 'http://localhost:4000/auth/google/callback';
+const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI || 'https://mealgo-production.up.railway.app/auth/google/callback';
 const oauthStateStore = new Map();
 const oauthTicketStore = new Map();
 
@@ -374,6 +375,29 @@ const getOauthClientUrl = (req) => {
   }
 
   return CLIENT_URL;
+};
+
+const isLocalhostHost = (host) =>
+  /^localhost(?::\d+)?$/i.test(host || '') || /^127\.0\.0\.1(?::\d+)?$/i.test(host || '');
+
+const isLocalhostUrl = (url) => {
+  try {
+    return isLocalhostHost(new URL(url).host);
+  } catch {
+    return false;
+  }
+};
+
+const getGoogleRedirectUri = (req) => {
+  const configuredRedirectUri = (GOOGLE_REDIRECT_URI || '').trim();
+  const requestHost = req.get('host') || '';
+
+  if (configuredRedirectUri && (!isLocalhostUrl(configuredRedirectUri) || isLocalhostHost(requestHost))) {
+    return configuredRedirectUri;
+  }
+
+  const protocol = req.get('x-forwarded-proto') || req.protocol || 'https';
+  return `${protocol}://${requestHost}/auth/google/callback`;
 };
 
 const issueOauthState = ({ mode, role, clientUrl }) => {
@@ -3210,9 +3234,10 @@ app.get('/auth/google/start', async (req, res) => {
     role,
     clientUrl: getOauthClientUrl(req),
   });
+  const googleRedirectUri = getGoogleRedirectUri(req);
   const params = new URLSearchParams({
     client_id: GOOGLE_CLIENT_ID,
-    redirect_uri: GOOGLE_REDIRECT_URI,
+    redirect_uri: googleRedirectUri,
     response_type: 'code',
     scope: 'openid email profile',
     prompt: 'select_account',
@@ -3237,6 +3262,7 @@ app.get('/auth/google/callback', async (req, res) => {
   }
 
   const oauthClientUrl = sanitizeClientUrl(oauthState.clientUrl) || CLIENT_URL;
+  const googleRedirectUri = getGoogleRedirectUri(req);
 
   try {
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
@@ -3246,7 +3272,7 @@ app.get('/auth/google/callback', async (req, res) => {
         code,
         client_id: GOOGLE_CLIENT_ID,
         client_secret: GOOGLE_CLIENT_SECRET,
-        redirect_uri: GOOGLE_REDIRECT_URI,
+        redirect_uri: googleRedirectUri,
         grant_type: 'authorization_code',
       }),
     });
